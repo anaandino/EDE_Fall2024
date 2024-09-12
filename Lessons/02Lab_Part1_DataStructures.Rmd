@@ -1,10 +1,11 @@
 ---
 title: "Lab 2 - Data Structures in R"
-subtitle: "Environmental Data Analytics"
 author: "John Fay & Luana Lima"
 date: "Fall 2024"
-editor_options: 
+output: pdf_document
+editor_options:
   chunk_output_type: console
+subtitle: Environmental Data Analytics
 ---
 
 ## Objective
@@ -130,7 +131,7 @@ Add comments in the code chunk below to indicate type of vectors created and wha
 
 matrix1[4, 1] #4th row and 1st column
 
-matrix1matrix1[4,  ] #just the 4th row
+matrix1[4,  ] #just the 4th row
 
 matrix1[ , 3] #will give 3rd column of the matrix
 
