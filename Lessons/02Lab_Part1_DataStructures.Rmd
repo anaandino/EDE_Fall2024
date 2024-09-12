@@ -3,6 +3,8 @@ title: "Lab 2 - Data Structures in R"
 subtitle: "Environmental Data Analytics"
 author: "John Fay & Luana Lima"
 date: "Fall 2024"
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## Objective
@@ -53,25 +55,25 @@ Add comments below to indicate what each operation does.(First answer is provide
 # Returns the 3rd item in the vector
 vector1[3]
 
-#
+#to make comments 
 max(vector1)
 
 #Create another vector of the values 10 thru 15
 vector4 <- c(10:15)
 
-#
+#combined vectors but did not assign it. If I had asgined then it would appear on the Environment 
 c(vector1, vector4)
 
-#
+#My ouput will be another vector
 vector1 * vector4
 
 #
 vector1 * 10
 
-#
-toupper(vector2) 
+#converting all to upper case
+toupper(vector2)
 
-#
+#Gives the opposire of vector 3
 !vector3
 
 ```
@@ -83,16 +85,16 @@ Find a 5-day forecast of temperatures (Fahrenheit) for Durham, North Carolina. C
 ```{r Vector Exercise}
 
 #Assign to the variable 'temps_F' a vector of high temperatures in F
-
+temps_F <-c(80, 82, 80, 75, 76)
 
 #What is the average of these temperatures 
-
+meanF <- mean(temps_F)
 
 #Compute the difference between each temperature and the average calculated above
-
+temps_F - meanF
 
 #Subtract 32 and multiply by 5/9ths to create a vector in Celsius
-
+temps_C <- (temps_F - 32)* 5/9
 
 ```
 
@@ -126,24 +128,24 @@ matrix3 <- matrix(
 Add comments in the code chunk below to indicate type of vectors created and what each operation does.
 ```{r Matrix Operations}
 
-matrix1[4, 1] #
+matrix1[4, 1] #4th row and 1st column
 
-matrix1[4,  ] #
+matrix1matrix1[4,  ] #just the 4th row
 
-matrix1[ , 3] #
+matrix1[ , 3] #will give 3rd column of the matrix
 
-matrix1[c(12, 14)] #
+matrix1[c(12, 14)] #specific position
 
-matrix1[c(12:14)] #
+matrix1[c(12:14)] #C gives the 14th or 12th position of the matrix but square brackets are more useful
 
-matrix1[2:4, 1:3] #
+matrix1[2:4, 1:3] #from matrix 1 I might want row 2,3,4 and columns 1,2,3. Basically making a subset. 
 
 #Create a vector of 6 values
 values = c(1, 26, 24, 68, 3, 44)
 #Create a vector of row names
 rnames <- c("R1", "R2") 
 #Create a vector of column names
-cnames <- c("C1", "C2", "C3") 
+cnames <- c("C1", "C2", "C3") #must use quotes because they are names for rows and columns
 
 matrix4 <- matrix(
   data = values, 
@@ -163,7 +165,7 @@ matrix4['R2','C1']
 ### Exercise 1b: Matrices
 Compute the mean of column "C2" in matrix4. (Should be 14.5)
 ```{r Matrix Exercise}
-
+mean(matrix4[,'C2'])
 ```
 
 
@@ -186,22 +188,22 @@ list1 <- list(
 ```{r List Operations}
 # List Operations
 
-#
+#R gives all elements in list
 list1
 
-#
+#if only inetrested in age. dollar sign gives you all the object in the list and you choose one
 list1$age
 
-#
+#I will all the names in the list
 names(list1)
 
-#
+#get first two objects on my list one
 list1[1:2]
 
-#
+#change the name from maria to janelle
 list1$name = "Janelle"
 
-#
+#gives just the value. just one bracket gives you another thinkg than two brackets. change the value of the list 
 list1[[4]] = 44
 ```
 
@@ -210,15 +212,16 @@ list1[[4]] = 44
 ```{r Creating data frames}
 # Data Frames ----
 #Create three vectors of equal length
-d <- c(1, 2, 3, 4) # What type of vector?
-e <- c("red", "white", "red", NA) # What type of vector?
-f <- c(TRUE, TRUE, TRUE, FALSE) # What type of vector?
+d <- c(1, 2, 3, 4) # What type of vector? numeric
+e <- c("red", "white", "red", NA) # What type of vector? characters
+f <- c(TRUE, TRUE, TRUE, FALSE) # What type of vector? logic
 
-#Combine the vectors into a dataframe
+#Combine the vectors into a dataframe. dataframe need to have same number of rows 
 dataframe1 <- data.frame(d,e,f) 
 
 #Set the column names & View
-names(dataframe1) <- c("ID","Color","Passed"); View(dataframe1) # 
+names(dataframe1) <- c("ID","Color","Passed");
+View(dataframe1) # 
 
 #Add a new column to the dataframe
 dataframe1$month <- c('Jan','Feb', 'Mar', 'Apr')
