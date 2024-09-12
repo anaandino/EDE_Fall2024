@@ -49,7 +49,7 @@ Is the new object you create a data frame?
 #Option 1
 class(car_speed)
 
-#Option 2
+#Option 2; will return true or false. to see if it data frame
 is.data.frame(car_speed)
 ```
 
@@ -93,7 +93,7 @@ names(df)
 How would you create a data frame?
 
 ```{r}
-#useful function data.frame()
+#useful function data.frame(). In here you specify this as colum names
 create_df <- data.frame("speed"=car_speed,"dist"=car_dist)
 create_df
 ```
@@ -108,6 +108,7 @@ nrow(df)
 length(df)  #same as ncol
 summary(df)
 head(df) #show the first 6 rows of df
+head(df,20) #show first 20 rows of df
 
 #If you know the number of the column you want you can refer to that to access column
 df[,1]
