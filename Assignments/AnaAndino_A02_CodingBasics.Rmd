@@ -1,6 +1,6 @@
 ---
 title: "Assignment 2: Coding Basics"
-author: "Student Name"
+author: "Ana Andino"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -31,12 +31,17 @@ This exercise accompanies the lessons/labs in Environmental Data Analytics on co
 4.  Insert comments in your code to describe what you are doing.
 
 ```{r basics 1}
-#1. 
+#1. In task one I gave a name to the sequence and then created the sequence from 1 to 55 but every 5 numbers
+sequence1 <- seq(1,55,5)
+sequence1
 
-#2. 
+#2. I computed the mean and median of the sequence.
+mean_seq <- mean(sequence1)
+median_seq<- median(sequence1)
 
-#3. 
-
+#3. I asked R to tell me if the mean is greater than the median which is false. First created an object that will return if true or false
+mean_greater <- mean_seq > median_seq
+mean_greater
 ```
 
 ## Basics, Part 2
@@ -50,13 +55,25 @@ This exercise accompanies the lessons/labs in Environmental Data Analytics on co
 8.  Label the columns of your data frame with informative titles.
 
 ```{r basics 2}
+#5 and #6 Created three different vectors with 4 components/items each
+vector_names <- c("Ana Andino", "Chrissie Pantoja", "Juana Perez", "Chris Smith") #Vector Type: Character
+vector_scores <- c(100, 99, 98, 97) #Vector Type: Numeric
+vector_scholarship <- c("TRUE", "FALSE","FALSE","TRUE") #Vector Type: Logic/character
+
+class(vector_scholarship) #just writing it as a reminder for future-self
+
+#7 Combining vectors into dataframe
+df_student_profiles <- data.frame(vector_names,vector_scores,vector_scholarship)
+
+#8 Labeling columns
+names(df_student_profiles)<- c("Student Name", "Test Schores", "Has Scholarship?")
 
 
 ```
 
 9.  QUESTION: How is this data frame different from a matrix?
 
-> Answer:
+> Answer: Even though they are both two-dimensional, matrixes contain elements only of the same type but in data frames columns can have different modes (or data types) and we can also name columns.
 
 10. Create a function with one input. In this function, use `if`...`else` to evaluate the value of the input: if it is greater than 50, print the word "Pass"; otherwise print the word "Fail". 
 
@@ -68,6 +85,16 @@ This exercise accompanies the lessons/labs in Environmental Data Analytics on co
 
 ```{r basics 3}
 #10. Create a function using if...else
+score <- function(x) {
+  result <- x*2
+  return(result)
+  print(result)
+}
+# Test the function
+studentscore <- score(67)
+
+ifelse(x>50, "Pass", "Fail") #log_exp, if TRUE, if FALSE
+##FALTA###
 
 #11. Create a function using ifelse()
 
