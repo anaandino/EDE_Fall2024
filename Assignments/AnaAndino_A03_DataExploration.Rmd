@@ -32,7 +32,7 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Ex
 
 1.  Load necessary packages (tidyverse, lubridate, here), check your current working directory and upload two datasets: the ECOTOX neonicotinoid dataset (ECOTOX_Neonicotinoids_Insects_raw.csv) and the Niwot Ridge NEON dataset for litter and woody debris (NEON_NIWO_Litter_massdata_2018-08_raw.csv). Name these datasets "Neonics" and "Litter", respectively. Be sure to include the subcommand to read strings in as factors.
 
-```{r, Install packages }
+```{r Install packages}
 #uploading r packages
 #install.packages('tidyverse')
 #install.packages('lubridate')
@@ -56,8 +56,8 @@ Litter <- read.csv(
 
 
 #Import the files and now they are visible in the Environment
-#read.csv(here("./Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv"),           stringsAsFactors = TRUE)
-#read.csv(here("./Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv"),       stringsAsFactors = TRUE)
+#read.csv(here("./Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv"),                                               stringsAsFactors = TRUE)
+#read.csv(here("./Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv"),                                         stringsAsFactors = TRUE)
 
 
 ```
@@ -120,7 +120,7 @@ I believe the answer to why there is an interest in studying these effects ties 
 
 ```{r Summary of most studied species}
 
-#I will use the maxsum argument  to focus on the sex top species studies.               Maxsum = 7 so the 7th element will be "others" which groups the remaining categories together. 
+#I will use the maxsum argument  to focus on the sex top species studies.                                                   Maxsum = 7 so the 7th element will be "others" which groups the remaining categories together. 
 summary(Neonics$Species.Common.Name, maxsum = 7)
 
 
@@ -132,7 +132,7 @@ summary(Neonics$Species.Common.Name, maxsum = 7)
 8.  Concentrations are always a numeric value. What is the class of `Conc.1..Author.` column in the dataset, and why is it not numeric? [Tip: Viewing the dataframe may be helpful...]
 
 ```{r Exploring Data: Class of variables}
-#Since I have two data sets, I need to specify from which data set comes the column      in question.
+#Since I have two data sets, I need to specify from which data set comes the column                                           in question.
 
 class(Neonics$Conc.1..Author.)
 #View(Neonics)
@@ -247,9 +247,7 @@ What type(s) of litter tend to have the highest biomass at these sites?
 
 > Answer: Needles. 
 
-```{r, include=FALSE}
-options(tinytex.verbose = TRUE)
-```
+
 
 
 
