@@ -56,6 +56,7 @@ What is the best way to wrangle data? There are multiple ways to arrive at a spe
 
 ```{r, results = "hide"}
 vignette("dplyr")
+##Gives you information about the function. Go to single table verbs. Three types: Rows (filter, slice, arrange), Columns (select, rename, mutate,relocate) and Groups Rows(summarise)
 ```
 
 ### Filter
@@ -69,17 +70,17 @@ Here are the relevant commands used in the `filter` function. Add some notes to 
 `<=`
 `>`
 `>=`
-`&`
-`|`
+`&`  #both to be true
+`|`  #one OR the other
 
 ```{r filtering data}
 class(NTL.phys.data$lakeid)
 class(NTL.phys.data$depth)
 
-# matrix filtering
+# 1st option - matrix filtering {Here filtering rows that are 0 and no rule for colums so its added before ","}
 NTL.phys.data.surface1 <- NTL.phys.data[NTL.phys.data$depth == 0,]
 
-# dplyr filtering
+# 2nd option -dplyr filtering
 NTL.phys.data.surface2 <- filter(NTL.phys.data, depth == 0)
 NTL.phys.data.surface3 <- filter(NTL.phys.data, depth < 0.25)
 
@@ -99,6 +100,7 @@ NTL.phys.data.PeterPaul2 <- filter(NTL.phys.data, lakename != "Central Long Lake
                                      lakename != "Hummingbird Lake" & lakename != "Tuesday Lake" &
                                      lakename != "Ward Lake" & lakename != "West Long Lake")
 NTL.phys.data.PeterPaul3 <- filter(NTL.phys.data, lakename %in% c("Paul Lake", "Peter Lake"))
+##%in% instead ofwriting all the names many times##
 
 # Choose a range of conditions of a numeric or integer variable
 summary(NTL.phys.data$daynum)
@@ -165,6 +167,7 @@ NTL.phys.data.PeterPaul1 <- select(NTL.phys.data.PeterPaul1, lakeid:daynum, mont
 
 # find out the start and end dates of the dataset
 interval(NTL.phys.data.PeterPaul1$sampledate[1], NTL.phys.data.PeterPaul1$sampledate[21613])
+#Better way:
 interval(first(NTL.phys.data.PeterPaul1$sampledate), last(NTL.phys.data.PeterPaul1$sampledate))
 ```
 
@@ -195,5 +198,7 @@ write.csv(NTL.phys.data.PeterPaul1, row.names = FALSE, file = "./Data/Processed/
 ## Closing Discussion
 
 When we wrangle a raw dataset into a processed dataset, we create a code file that contains only the wrangling code. We then save the processed dataset as a new spreadsheet and then create a separate code file to analyze and visualize the dataset. Why do we keep the wrangling code separate from the analysis code?
+
+*TIP*: if we do all in the same file it could become too big and then you can get lost when finding code. so divide wrangling from analysis process. 
 
 
