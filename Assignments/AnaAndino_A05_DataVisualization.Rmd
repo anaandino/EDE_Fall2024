@@ -32,11 +32,16 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Vi
 
 ```{r initialize project}
 #1 
+
 library (tidyverse)
+library(lubridate)
 library(here)
 library(cowplot)
 
-getwd()
+#verify home directory 
+getwd() 
+
+#2 Read processed data files 
 
 PeterPaul.processed <- 
   read.csv(
@@ -47,14 +52,16 @@ Litter.processed <-
   read.csv(here("./Data/Processed_KEY/NEON_NIWO_Litter_mass_trap_Processed.csv"), 
             stringsAsFactors = TRUE)
 
-rm(Litter.processes)
 
-#2 
 class(Litter.processed$collectDate)
 class(PeterPaul.processed$sampledate)
 
-Litter.processed$collectDate <- as.Date(Litter.processed$collectDate, format("%Y-%m-%d"))
-PeterPaul.processed$sampledate <- as.Date(PeterPaul.processed$sampledate, format("%Y-%m-%d"))
+#change date format
+
+Litter.processed$collectDate <- as.Date(Litter.processed$collectDate, 
+                                        format("%Y-%m-%d"))
+PeterPaul.processed$sampledate <- as.Date(PeterPaul.processed$sampledate, 
+                                          format("%Y-%m-%d"))
 
 ```
 ## Define your theme
@@ -89,9 +96,9 @@ library(dplyr)
 
 PeterPaul.processed %>%
   ggplot(aes(x= po4, y=tp_ug, color = lakename)) +
-          geom_point(alpha = 0.6, size = 2) +  #I added points to see the outliers 
+          geom_point(alpha = 0.6, size = 2) +  #Added points to catch outliers 
            geom_smooth(method = "lm", se = TRUE) + #Line with CI
-  xlim(0, 50) + #added axis limits according to data
+  xlim(0, 50) + #added axis limits according to data on x and y axis
   ylim(0, 150) +
   labs(title = "Total Phosporus vs. Phosphate Levels",
        x = "Phospate (PO4)",
@@ -111,14 +118,18 @@ Tips:
 * Setting a legend's position to "none" will remove the legend from a plot.
 * Individual plots can have different sizes when combined using `cowplot`.
 
+```{r, echo = FALSE}
+invisible(factor(PeterPaul.processed$month, 
+       levels = 1:12,
+       labels = month.abb))
+```
+
 ```{r Create boxplots}
 #5 
 #Temperature Boxplot
 #Convert month to a factor with 12 levels, labelled with month names
 
-factor(PeterPaul.processed$month, 
-       levels = 1:12,
-       labels = month.abb)
+
 
 temperature_plot <- PeterPaul.processed %>%
   ggplot(aes(x = factor(month, levels = 1:12, labels = month.abb), 
@@ -134,7 +145,8 @@ print(temperature_plot)
 
 #TP Plot 
 TP_plot <- PeterPaul.processed %>%
-  ggplot(aes( x = factor(month, levels = 1:12, labels = month.abb), y = tp_ug, color = lakename))+
+  ggplot(aes( x = factor(month, levels = 1:12, labels = month.abb),
+              y = tp_ug, color = lakename))+
   geom_boxplot()+
   labs(title = "TP by Month", 
        x= "Month",
@@ -152,6 +164,7 @@ TN_plot <- PeterPaul.processed %>%
            labs(title = "TN by month", x = "Month",
                 y = "TN")+
            my_theme
+print(TN_plot)
          
 
 
@@ -165,33 +178,39 @@ library(dplyr)
 
 my_theme2 <- theme_minimal(base_size = 10) + 
   theme(
-    axis.title.x = element_blank(),  # Remove x-axis title for all plots
-    legend.position = "none"       
+   axis.title.x = element_blank(),  
+    axis.text.x=element_blank(),
+    axis.ticks.x=element_blank(),  # Remove x-axis title for upper plots
+    legend.position = "none"  
+  )
+
+my_theme3 <- theme_minimal(base_size = 10) + 
+  theme(
+    legend.position = "right"  
   )
 
 # Apply the modified custom theme to the individual plots
 temperature_plot <- temperature_plot + my_theme2
 TP_plot <- TP_plot + my_theme2
-TN_plot <- TN_plot + my_theme2
+TN_plot <- TN_plot + my_theme3
 
 # Combine the plots
 combined.plots <- plot_grid(
   temperature_plot, TP_plot, TN_plot,           
   ncol = 1,          # Arrange plots in 1 column
-  align = "v"        # Align vertically
+  align = "v",        # Align vertically
+   rel_heights = c(1, 1, 1) # Equal heights for all plots
 )
 
+
 print(combined.plots)
-
-##ERASE##
-
 
 
 ```
 
 Question: What do you observe about the variables of interest over seasons and between lakes? 
 
-> Answer: 
+> Answer: There is a clear seasonal trend where temperatures rise from May to August and then begin to decline in September and both lakes have similar trends in that sense. With regards to TP, there is a variation across months and higher concentrations seem to be appear in summer months - where Peter Lake shows more this trend. Peter Lake also has more variations and displays more outliers. When analyzing TN, there is a variability across months but no consitent season patters. Peter Lake has overall higher rates of TN and bigger spikes as wel. It also looks like, TP variation follows temperature by month (seasons) more clearly than TN does, especially when looking at Peter Lake. Overall, Peter Lake seems to have more nutrient fluctuations than Paul Lake.
 
 6. [Niwot Ridge] Plot a subset of the litter dataset by displaying only the "Needles" functional group. Plot the dry mass of needle litter by date and separate by NLCD class with a color aesthetic. (no need to adjust the name of each land use)
 
@@ -203,32 +222,32 @@ Litter.data <- Litter.processed %>%
   filter(functionalGroup == "Needles") %>%
   ggplot(aes(x=collectDate, y= dryMass, color = nlcdClass)) +
     geom_point() +
-    labs(tile = "test",
-         x = "test2",
-         y = "test3") +
+    labs(title = "National Land Cover Database (NLCD)",
+         x = "Date Collected (Year)",
+         y = "Dry Mass",
+         color = "NLCD Class") +
   my_theme
  print(Litter.data)  
  
  
- 
- Litter.data.facets <- Litter.processed %>%
+ #7
+
+Litter.data.facets <- Litter.processed %>%
   filter(functionalGroup == "Needles") %>%
   ggplot(aes(x=collectDate, y= dryMass)) +
     geom_point() +
    facet_wrap(
 facets = vars(nlcdClass),
-nrow=1,ncol=3)
-    labs(tile = "test",
-         x = "test2",
-         y = "test3") +
+nrow=1,ncol=3) +
+    labs(tile = "National Land Cover Database (NLCD)",
+         x = "Year",
+         y = "Dry Mass",
+         Legend = "NLCD Class") +
   my_theme
+
  print(Litter.data.facets)  
-  
-
-#7
-
 
 ```
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
 
-> Answer: In this case, 7 is better for analysis. By Faceting you are allowed to compare trends across groups without the visual noise that color can introduce which happened in this case with three different groups. Number 7 allows viewers to focus on each class independently while still being able to see differences and similarities across data. 
+> Answer: In this case, 7 is better for analysis. By Faceting you are allowed to compare trends across groups without the visual noise that color can introduce which happened in this case with three different groups. Number 7 allows viewers to focus on each class independently while still being able to see differences and similarities across data. However, it will depend on your goal. If your gooal was to look at trends trends across time regardless of the NLCD class, the color separation might be better. 
