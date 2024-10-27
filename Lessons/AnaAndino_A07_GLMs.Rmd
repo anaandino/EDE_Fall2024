@@ -25,37 +25,36 @@ This exercise accompanies the lessons in Environmental Data Analytics on general
 
 2. Build a ggplot theme and set it as your default theme.
 
-```{r setup2}
+```{r setup2, message=FALSE, warning = FALSE}
 #1
-getwd()
-install.packages(c("tidyverse", "agricolae", "lubridate", "here"))
+
+#install.packages(c("tidyverse", "agricolae", "lubridate", "here"))
 
 # Load the packages
 library(tidyverse)   
 library(agricolae)
 library(lubridate)  
-library(here)        
+library(here)    
+library(ggplot2)
 
 # Check your working directory
 getwd()
 
 #upload raw data
-LakeChemistryPhysics <- read.csv(here("Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv"), stringsAsFactors = TRUE)
-head(LakeChemistryPhysics$sampledate)
+LakeChemistryPhysics <- read.csv(
+  here("Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv"),
+  stringsAsFactors = TRUE)
 
 # Set date to date format
-
-LakeChemistryPhysics$sampledate <- as.Date(LakeChemistryPhysics$sampledate , format = "%m/%d/%y")
-
-#2nd option:
-LakeChemistryPhysics$sampledate <- mdy(LakeChemistryPhysics$sampledate)
+LakeChemistryPhysics$sampledate <- as.Date(LakeChemistryPhysics$sampledate,
+                                           format = "%m/%d/%y")
 
 #2
 
-mytheme <- theme_dark(base_size = 14) +
+mytheme <- theme_minimal(base_size = 14) +
   theme(axis.text = element_text(color = "grey", face = "bold"),
          axis.title = element_text(size = 12),
-                                 legend.position= "top")
+                                 legend.position= "bottom")
 theme_set(mytheme)
   
 
@@ -78,8 +77,9 @@ Ha: Mean lake temperature in July changes across different depths.
 
 5. Visualize the relationship among the two continuous variables with a scatter plot of temperature by depth. Add a smoothed line showing the linear model, and limit temperature values from 0 to 35 °C. Make this plot look pretty and easy to read.
 
-```{r scatterplot}
+```{r scatterplot, message=FALSE, warning=FALSE}
 #4
+
 Lake.subset <- LakeChemistryPhysics %>%
   filter(month(sampledate) == 7) %>%
   select(lakename:daynum, depth:temperature_C) %>%
@@ -89,8 +89,8 @@ Lake.subset <- LakeChemistryPhysics %>%
 
 plot1 <- ggplot(Lake.subset,
   aes(x= depth, y= temperature_C))+
-    geom_point(alpha = 0.5, size = 3, color = "white")+
-    geom_smooth(method = lm, se = FALSE, color = "orange", size = 0.8)+
+    geom_point(alpha = 0.5, size = 2, color = "lightblue")+
+    geom_smooth(method = lm, se = FALSE, color = "black", size = 0.8)+
   ylim(0 , 35)+
    labs(
     title = "Temperature by Depth in July",
@@ -109,11 +109,10 @@ print(plot1)
 
 7. Perform a linear regression to test the relationship and display the results.
 
-```{r linear.regression, echo=TRUE}
+```{r linear.regression, echo=TRUE, warning=FALSE}
 #7
 
 reg.depth <- lm(data = Lake.subset, temperature_C ~ depth)
-reg.depth <- lm(temperature_C ~ depth, data = Lake.subset)
 
 summary(reg.depth)
 
@@ -134,7 +133,7 @@ Let's tackle a similar question from a different approach. Here, we want to expl
 
 10. Run a multiple regression on the recommended set of variables. 
 
-```{r temperature.model}
+```{r temperature.model, warning=FALSE}
 #9
 
 LakesDepth.all <- lm(data = Lake.subset, temperature_C ~ depth + year4 + daynum)
@@ -161,13 +160,13 @@ summary(LakesDepth.model)
 
 12. Now we want to see whether the different lakes have, on average, different temperatures in the month of July. Run an ANOVA test to complete this analysis. (No need to test assumptions of normality or similar variances.) Create two sets of models: one expressed as an ANOVA models and another expressed as a linear model (as done in our lessons).
 
-```{r anova.model}
+```{r anova.model, warning=FALSE}
 #12
 
 #Using aov
 LakeTemp.anova <- aov(data = Lake.subset, temperature_C ~ lakename)
 summary(LakeTemp.anova)
-#P-values very small thus reject the null hypothesis and conclude that at least one lake's average temperature differs from the others
+#P-values very small thus reject the null hypothesis
 
 # Using Linear model 
 LakeTemp.LmAnova <- lm(data = Lake.subset, temperature_C ~ lakename)
@@ -183,7 +182,7 @@ There is a significant difference. In both models p-values are very small and al
 
 14. Create a graph that depicts temperature by depth, with a separate color for each lake. Add a geom_smooth (method = "lm", se = FALSE) for each lake. Make your points 50 % transparent. Adjust your y axis limits to go from 0 to 35 degrees. Clean up your graph to make it pretty. 
 
-```{r scatterplot.2}
+```{r scatterplot.2, warning=FALSE, fig.align='center', fig.width=8, fig.height=5}
 #14.
 plot.template <- ggplot(Lake.subset,
   aes(x= depth, y = temperature_C, color = lakename))+
@@ -192,12 +191,15 @@ plot.template <- ggplot(Lake.subset,
     ylim (0, 35)+
     labs(title = "Temperature by Depth in July for Different Lakes",
     x = "Depth (m)",
-    y = "Temperature (°C)", color = "Lake Name")+
-  theme_minimal(base_size = 14) + 
+    y = "Temperature (°C)", color = "Lake Name", size = 3)+
+  theme_minimal(base_size = 12) + 
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold"), 
     axis.title = element_text(face = "plain"),  
-    legend.position = "bottom") 
+    legend.position = "right",
+     legend.text = element_text(size = 10), 
+    legend.key.width = unit(1.5, "cm")
+  ) 
 
 print(plot.template)
 
@@ -213,35 +215,27 @@ print(plot.template)
 #still just looking at July 
 tukey.anova<- TukeyHSD(LakeTemp.anova)
 print(tukey.anova)
+#For my own visualization
+#plot(tukey.anova, las = 1)
 
-plot(tukey.anova, las = 1)
-
+#Finding ways to do it more automatically
 tukey_df <- as.data.frame(tukey.anova$lakename)
 peter_lake_comparisons <- tukey_df[grep("Peter Lake", rownames(tukey_df)), ]
 same_mean_as_peter <- peter_lake_comparisons %>%
   filter(`p adj` > 0.05 & lwr < 0 & upr > 0)
-cat("Lakes with the same mean temperature as Peter Lake:\n")
 print(same_mean_as_peter)
-
-
-
 ```
 
 16.From the findings above, which lakes have the same mean temperature, statistically speaking, as Peter Lake? Does any lake have a mean temperature that is statistically distinct from all the other lakes?
 
->Answer: Pual Lake and Ward Lake have a mean temperatute that is statistically the same as Peter Lake and there is no lake that has a statistically distinct mean temperature from all others,
-
- 
+>Answer: Pual Lake and Ward Lake have a mean temperature that is statistically the same as Peter Lake and there is no lake that has a statistically distinct mean temperature from all others,
 
 17. If we were just looking at Peter Lake and Paul Lake. What's another test we might explore to see whether they have distinct mean temperatures? 
-
 >Answer: Possibly a two sample t- test
-
-
 
 18. Wrangle the July data to include only records for Crampton Lake and Ward Lake. Run the two-sample T-test on these data to determine whether their July temperature are same or different. What does the test say? Are the mean temperatures for the lakes equal? Does that match you answer for part 16?
 
-```{r t.test}
+```{r t.test, warning=FALSE}
 
 Crampton_Ward_data <- Lake.subset %>%
   filter(lakename %in% c("Crampton Lake", "Ward Lake"))
@@ -252,8 +246,6 @@ two_test <- t.test(
   data = Crampton_Ward_data)
 
 print(two_test)
-
-
 
 ```
 
