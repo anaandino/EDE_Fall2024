@@ -107,7 +107,8 @@ ozone.plot <- ggplot(GaringerOzone,
                        geom_smooth(method = "lm", color = "blue", se = FALSE) +
                        labs(Title = " Daily Ozone Concentration (2010-2019)",
                             x = "Date", 
-                            y = "Ozone Conetration (ppm)")
+                            y = "Ozone Conetration (ppm)") + 
+  theme_minimal()
 
 plot(ozone.plot)
 ```
@@ -128,7 +129,7 @@ GaringerOzone$Max.Ozone.Daily <-
 
 ```
 
-> Answer: linear interpolation assumes a steady rate of change where there is no data thus, providing a smooth transition while piecewise functions fils the NAs with the prvious known value which could introduce sudden jumps or downs in the data. This applies even more to daily datasets 
+> Answer: linear interpolation assumes a steady rate of change where there is no data thus, providing a smooth transition while piecewise functions fils the NAs with the prvious known value which could introduce sudden jumps or downs in the data. This applies even more to daily datasets.
 
 
 9. Create a new data frame called `GaringerOzone.monthly` that contains aggregated data: mean ozone concentrations for each month. In your pipe, you will need to first add columns for year and month to form the groupings. In a separate line of code, create a new Date column with each month-year combination being set as the first day of the month (this is for graphing purposes only)
@@ -212,7 +213,7 @@ summary(smk.trend.monthly)
 
 ```
 
-> Answer: The season Mann-Kendall can detect trends in data with seasonal cycles and it specifically checks for a monotonic trend while allowing seasonality. It has a no seasonality, non-parametric, missing data allowed component. Also, the datahas already been wrnagled for the format needed. 
+> Answer: The season Mann-Kendall can detect trends in data with seasonal cycles and it specifically checks for a monotonic trend while allowing seasonality. It has a no seasonality, non-parametric, missing data allowed component. Also, the data has already been wrnagled for the format needed. 
 
 13. Create a plot depicting mean monthly ozone concentrations over time, with both a geom_point and a geom_line layer. Edit your axis labels accordingly.
 
@@ -233,7 +234,7 @@ ggplot(GaringerOzone.monthly,
 
 14. To accompany your graph, summarize your results in context of the research question. Include output from the statistical test in parentheses at the end of your sentence. Feel free to use multiple sentences in your interpretation.
 
-> Answer: displays noticeable seasonal variability, with peaks and troughs that correspond to expected environmental cycles. Over the observed period, a general downward trend in ozone concentration is suggested.The Seasonal Mann-Kendall test supports this observation, indicating a statistically significant monotonic decrease in monthly ozone levels (Score = -77, Var(Score) = 1499, tau = -0.143, p = 0.047).
+> Answer: The graph displays noticeable seasonal variability, with peaks and troughs that correspond to expected environmental cycles. Over the observed period, a general downward trend in ozone concentration is suggested thus the ozone concentrations have changed since 2010s.The Seasonal Mann-Kendall test supports this observation, indicating a statistically significant monotonic decrease in monthly ozone levels (Score = -77, Var(Score) = 1499, tau = -0.143, p*** = 0.047).
 
 15. Subtract the seasonal component from the `GaringerOzone.monthly.ts`. Hint: Look at how we extracted the series components for the EnoDischarge on the lesson Rmd file.
 
@@ -255,4 +256,4 @@ print(mk_nonseasonal)
 print(smk_analysis)
 ```
 
-> Answer: The tau value is slightly more negative in the deseasonalized series, indicating a somewhat stronger downward trend when seasonality is removed.The p-value for the deseasonalized series is lower (0.0075), indicating a stronger statistical significance for the downward trend in the absence of seasonal fluctuations which was already statistically significant. In summary, the results indicate that the downward trend in ozone concentrations over time is more pronounced and statistically significant once seasonal effects are removed. 
+> Answer: The tau value is slightly more negative in the deseasonalized series, indicating a somewhat stronger downward trend when seasonality is removed.The p-value for the deseasonalized series is lower (0.0075 while the other is 0.0467), indicating a stronger statistical significance for the downward trend in the absence of seasonal fluctuations which was already statistically significant. In summary, the results indicate that the downward trend in ozone concentrations over time is more pronounced and statistically significant once seasonal effects are removed. 
